@@ -1,21 +1,14 @@
-
 #include "CSet.h"
-#include <iostream>
 
 
 CSet::CSet() = default;
 
 CSet::CSet(int N) 
 {
-	this->N = floor(N + 1 / 32);
-	if (this->N == 0)
-	{
-		Set = new unsigned int[this->N + 1];
-	}
-	else
-	{
-		Set = new unsigned int[this->N];
-	}
+	this->N = ceil(((double) N + 1) / 32);
+
+	Set = new unsigned int[this->N];
+
 	for (size_t i = 0; i < this->N; ++i)	
 	{
 		this->Set[i] = 0;
@@ -78,41 +71,80 @@ CSet::~CSet()
 
 CSet operator+(const CSet& Set1, const CSet& Set2) 
 {
-	CSet ob(Set1.N);
+	if (Set1.N > Set2.N) {
+		CSet ob(Set1.N);
+		ob.Set[0] = Set1.Set[0] | Set2.Set[0];
 
-	ob.Set[0] = Set1.Set[0] | Set2.Set[0];
-	return ob;
+		return ob;
+	}
+	else {
+		CSet ob(Set2.N);
+		ob.Set[0] = Set1.Set[0] | Set2.Set[0];
+
+		return ob;
+	}
+
 }
 
 CSet operator-(const CSet& Set1, const CSet& Set2) 
 {
-	CSet ob(Set1.N);
+	if (Set1.N > Set2.N) {
+		CSet ob(Set1.N);
+		ob.Set[0] = Set1.Set[0] & Set2.Set[0];
 
-	ob.Set[0] = Set1.Set[0] & Set2.Set[0];
+		return ob;
+	}
+	else {
+		CSet ob(Set2.N);
+		ob.Set[0] = Set1.Set[0] & Set2.Set[0];
+
+		return ob;
+	}
+}
+
+CSet add(CSet& ob, unsigned int* mainArr, int size)
+{
+	for (size_t i = 0; i < size; ++i) 
+	{
+		ob.Set[0] |= (1 << mainArr[i]);
+	}
+
 	return ob;
 }
 
-unsigned int* add(CSet& ob1, unsigned int* mainArr, int sizeOfmainArr) //переделать чтобы если кодичество чисел было больше 32, то arr[0] уже будет неверно
+bool check(CSet& ob, int num) 
 {
-	for (size_t i = 0; i < sizeOfmainArr; ++i) 
-	{
-		ob1.Set[0] |= (1 << mainArr[i]);
+	for (size_t i = 0; i < ob.N; ++i) {
+		if (ob.Set[i] & (1 << num))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
-
-	return ob1.Set;
 }
 
-bool check(CSet& ob1, int num) 
-{
-	if (ob1.Set[0] & (1 << num)) 
-	{
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
 
 std::ostream& operator<<(std::ostream& os, const CSet& ob) {
-	for (size_t i = 0; i < ob.)
-}
+	std::vector<size_t> vec;
+	os << "Размерность битового массива (1 = 32 бита): " << ob.N << std::endl;
+	for (size_t i = 0; i < ob.N; ++i) {
+		os << std::bitset<sizeof(ob.Set[i])* CHAR_BIT>(ob.Set[i]) << std::endl;
+	}
+	for (size_t i = 0; i < ob.N; ++i) {
+		for (size_t j = 0; j < 32; ++j) {
+			bool flag = (bool((1 << j) & ob.Set[i]));
+			if (flag == true) {
+				vec.push_back(j);
+			}
+		}
+	}
+
+	for (size_t i = 0; i < vec.size(); ++i) {
+		os << vec[i] << " ";
+	}
+
+	return os;
+}	
