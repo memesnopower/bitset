@@ -6,17 +6,17 @@ CSet::CSet() = default;
 
 CSet::CSet(int N)
 {
-	size_t max_num = N;
-	this->N = ceil((double)(N + 1) / 32);
-	
+	this->N = N;
+	this->size_arr = ceil((double)(N + 1) / 32);
+
 	//std::cout << this->N << std::endl;
 
-	Set = new unsigned int[this->N];
+	Set = new unsigned int[size_arr] {0};
 
-	for (size_t i = 0; i < this->N; ++i)
+	/*for (size_t i = 0; i < this->N; ++i)
 	{
 		this->Set[i] = 0;
-	}
+	}*/
 }
 
 CSet::CSet(const CSet& CS)
@@ -70,11 +70,28 @@ CSet::~CSet()
 		delete[] Set;
 	}
 }
-	
-CSet& CSet::operator++() {
-	
 
-	return *this;
+CSet& CSet::operator++() {
+
+	if (this->N % 32 == 0) {
+		this->size_arr++;
+		this->N++;
+		unsigned int* new_set = new unsigned int[size_arr];
+
+		for (size_t i = 0; i < size_arr-1; ++i) {
+			new_set[i] = this->Set[i];
+		}
+		new_set[size_arr - 1] = 0;
+
+		delete[] Set;
+		Set = new_set;
+		return *this;
+	}
+	else {
+		this->N++;
+		return *this;
+	}
+
 }
 
 //CSet& CSet::operator--() {
@@ -150,7 +167,7 @@ CSet& CSet::operator++() {
 CSet add(CSet& ob, unsigned int* mainArr, int size)
 {
 	for (size_t i = 0; i < size; ++i) {
-		size_t element = floor(mainArr[i] / 32);  
+		size_t element = floor(mainArr[i] / 32);
 		size_t shifts = mainArr[i] - 32 * element;
 		ob.Set[element] |= (1 << shifts);
 	}
@@ -176,7 +193,7 @@ std::ostream& operator<<(std::ostream& os, const CSet& ob) {
 	std::vector<size_t> vec;
 	os << "Размерность битового массива (1 = 32 бита): " << ob.N << std::endl;
 	for (size_t i = 0; i < ob.N; ++i) {
-		os << std::bitset<sizeof(ob.Set[i])* CHAR_BIT>(ob.Set[i]);
+		os << std::bitset<sizeof(ob.Set[i]) * CHAR_BIT>(ob.Set[i]);
 	}
 	/*for (size_t i = 0; i < ob.N; ++i) {
 		for (size_t j = 0; j < 32; ++j) {
