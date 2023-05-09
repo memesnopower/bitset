@@ -8,6 +8,7 @@
 class CSet {
 	int N;
 	unsigned int* Set = nullptr;
+	size_t size_arr = 0;
 
 public:
 
