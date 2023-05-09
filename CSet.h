@@ -1,5 +1,5 @@
-
 #pragma once
+
 #include <iostream>
 #include <bitset>
 #include <vector>
@@ -12,7 +12,7 @@ class CSet {
 public:
 
 	CSet();
-	CSet(int N);
+	CSet(unsigned int* arr, int N);
 	CSet(const CSet& CS);
 	CSet(CSet&& MS) noexcept;
 	CSet& operator =(const CSet& Set2);
