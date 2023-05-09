@@ -4,8 +4,8 @@
 int main() {
 	setlocale(LC_ALL, "rus");
 
-	size_t N = 0;
-	size_t M = 0;
+	int N = 0;
+	int M = 0;
 
 	std::cout << "Введите размерность первого множества: " << std::endl;
 	std::cin >> N;
@@ -25,35 +25,35 @@ int main() {
 		std::cin >> arr2[i];
 	}
 
-	CSet ob1(N);
+	CSet ob1(arr1, N);
 	add(ob1, arr1, N);
 
 	std::cout << "Первое множество: " << std::endl;
 	std::cout << ob1 << std::endl;
 
-	CSet ob2(M);
+	CSet ob2(arr2, M);
 	add(ob2, arr2, M);
 
 	std::cout << "Второе множество: " << std::endl;
 	std::cout << ob2 << std::endl;
 
-	CSet ob_copy(N);
+	CSet ob_copy(arr1, N);
 	ob_copy = ob1;
 
 	std::cout << "Конструктор копирования: " << std::endl;
 	std::cout << ob_copy << std::endl;
 
-	CSet ob3(N);
-	CSet ob_move(N);
+	CSet ob3(arr1, N);
+	CSet ob_move(arr1, N);
 	add(ob3, arr1, N);
 	ob_move = std::move(ob3);
 
 	std::cout << "Конструктор перемещения: " << std::endl;
 	std::cout << ob_move << std::endl;
 
-	CSet ob_merged(N);
-	CSet ob4(N);
-	CSet ob5(M);
+	CSet ob_merged(arr1, N);
+	CSet ob4(arr1, N);
+	CSet ob5(arr2, M);
 	add(ob4, arr1, N);
 	add(ob5, arr2, M);
 
@@ -64,9 +64,9 @@ int main() {
 
 
 
-	CSet ob_intersection(N);
-	CSet ob6(N);
-	CSet ob7(M);
+	CSet ob_intersection(arr1, N);
+	CSet ob6(arr1, N);
+	CSet ob7(arr2, M);
 	add(ob6, arr1, N);
 	add(ob7, arr2, M);
 
