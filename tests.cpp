@@ -51,7 +51,7 @@ int main() {
 	std::cout << "Конструктор перемещения: " << std::endl;
 	std::cout << ob_move << std::endl;
 
-	CSet ob_merged(arr1, N);
+	/*CSet ob_merged(arr1, N);
 	CSet ob4(arr1, N);
 	CSet ob5(arr2, M);
 	add(ob4, arr1, N);
@@ -73,7 +73,7 @@ int main() {
 	ob_intersection = ob6 - ob7;
 
 	std::cout << "Тест operator- или же пересечение множеств: " << std::endl;
-	std::cout << ob_intersection << std::endl;
+	std::cout << ob_intersection << std::endl;*/
 
 
 
