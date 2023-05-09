@@ -12,7 +12,7 @@ class CSet {
 public:
 
 	CSet();
-	CSet(unsigned int* arr, int N);
+	CSet(int N);
 	CSet(const CSet& CS);
 	CSet(CSet&& MS) noexcept;
 	CSet& operator =(const CSet& Set2);
