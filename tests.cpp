@@ -1,4 +1,3 @@
-
 #include "CSet.h"
 
 int maxNum(unsigned int* arr, int size) {
@@ -48,12 +47,23 @@ int main() {
 	add(ob1, arr1, N);
 
 	std::cout << ob1 << std::endl;
-	
+
 	CSet ob2(max2);
 	add(ob2, arr2, M);
 	std::cout << ob2 << std::endl;
 
+	CSet ob3(max1);
+	add(ob3, arr1, N);
+	std::cout << "Перегрузка ++ob: " << std::endl;
+	std::cout << --ob3 << std::endl;
+
+	/*CSet ob4(max1);
+	add(ob4, arr1, N);
+	ob4 = ob3 + ob2;
+	std::cout << "Перегрузка +: " << std::endl;
+	std::cout << ob4 << std::endl;*/
 
 	delete[] arr1;
 	delete[] arr2;
 }
+
