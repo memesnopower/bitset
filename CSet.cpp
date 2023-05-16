@@ -206,56 +206,96 @@ CSet& CSet::operator--(int) {
 }
 
 CSet operator+(const CSet& Set1, const CSet& Set2) {
+	
 	size_t max = 0;
 	size_t min = 0;
 	max = std::max(Set1.size_arr, Set2.size_arr);
 	min = std::min(Set1.size_arr, Set2.size_arr);
-	//std::cout << "max" << max;
-	//std::cout << "min" << min;
-	////unsigned int* merged_set = new unsigned int[max];
-
+	unsigned int* set = new unsigned int[max];
 	CSet ob(max);
+
 	if (min == Set1.size_arr) {
-		unsigned int* more_set = new unsigned int[max];
-
-		/*for (size_t i = 0; i < Set1.size_arr; ++i) {
-			std::cout << Set1.Set[i];
-		}
-		std::cout << std::endl;*/
-
 		for (size_t i = 0; i < min; ++i) {
-			more_set[i] = Set1.Set[i];
+			set[i] = Set1.Set[i];
 		}
 
-		for (size_t i = 0; i < max - min; ++i) {
-			more_set[i + min] = 0;
+		for (size_t i = min; i < max; ++i) {
+			set[i] = 0;
 		}
-		
+
 		for (size_t i = 0; i < max; ++i) {
-			ob.Set[i] = Set2.Set[i] | more_set[i];
+			ob.Set[i] = set[i] | Set2.Set[i];
 		}
-
-		delete[] more_set;
 
 		return ob;
 	}
 	else {
-		unsigned int* more_set = new unsigned int[max];
 		for (size_t i = 0; i < min; ++i) {
-			more_set[i] = Set2.Set[i];
+			set[i] = Set2.Set[i];
 		}
 
-		for (size_t i = 0; i < max-min; ++i) {
-			more_set[i + min] = 0;
+		for (size_t i = min; i < max; ++i) {
+			set[i] = 0;
 		}
 
 		for (size_t i = 0; i < max; ++i) {
-			ob.Set[i] = Set1.Set[i] | more_set[i];
+			ob.Set[i] = set[i] | Set1.Set[i];
 		}
-		delete[] more_set;
 
 		return ob;
 	}
+
+	delete[] set;
+	//size_t max = 0;
+	//size_t min = 0;
+	//max = std::max(Set1.size_arr, Set2.size_arr);
+	//min = std::min(Set1.size_arr, Set2.size_arr);
+	//std::cout << "max" << max;
+	//std::cout << "min" << min;
+	//unsigned int* merged_set = new unsigned int[max];
+
+	//CSet ob(max);
+	//if (min == Set1.size_arr) {
+	//	unsigned int* more_set = new unsigned int[max];
+
+	//	/*for (size_t i = 0; i < Set1.size_arr; ++i) {
+	//		std::cout << Set1.Set[i];
+	//	}
+	//	std::cout << std::endl;*/
+
+	//	for (size_t i = 0; i < min; ++i) {
+	//		more_set[i] = Set1.Set[i];
+	//	}
+
+	//	for (size_t i = 0; i < max - min; ++i) {
+	//		more_set[i + min] = 0;
+	//	}
+	//	
+	//	for (size_t i = 0; i < max; ++i) {
+	//		ob.Set[i] = Set2.Set[i] | more_set[i];
+	//	}
+
+	//	delete[] more_set;
+
+	//	return ob;
+	//}
+	//else {
+	//	unsigned int* more_set = new unsigned int[max];
+	//	for (size_t i = 0; i < min; ++i) {
+	//		more_set[i] = Set2.Set[i];
+	//	}
+
+	//	for (size_t i = 0; i < max-min; ++i) {
+	//		more_set[i + min] = 0;
+	//	}
+
+	//	for (size_t i = 0; i < max; ++i) {
+	//		ob.Set[i] = Set1.Set[i] | more_set[i];
+	//	}
+	//	delete[] more_set;
+
+	//	return ob;
+	//}
 	
 	
 }
