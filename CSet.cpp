@@ -67,7 +67,7 @@ CSet::~CSet()
 
 CSet& CSet::operator++() {
 
-	if ((this->N+1) % 32 == 0) {
+	if ((this->N + 1) % 32 == 0) {
 		this->size_arr++;
 		this->N++;
 		unsigned int* increment_set = new unsigned int[size_arr];
@@ -89,7 +89,7 @@ CSet& CSet::operator++() {
 }
 
 CSet& CSet::operator--() {
-	
+
 	if ((this->N + 1) % 32 == 1) {
 		size_t old_size_arr = this->size_arr;
 		this->size_arr--;
@@ -119,61 +119,179 @@ CSet& CSet::operator--() {
 	}
 	else {
 		int old_max_num = this->N;
-		this->N--;
-
-		for (size_t i = 0; i < size_arr; ++i) {
-			size_t element = floor(old_max_num / 32);   //доделать чтобы если было 1 число, то массив был равен nullptr;
-			this->Set[element] &= ~(1 << old_max_num);
+		this->N--; 
+		if (N == 0) {
+			this->Set = nullptr;
 		}
+		else {
+			for (size_t i = 0; i < size_arr; ++i) {
+				size_t element = floor(old_max_num / 32);  
+				this->Set[element] &= ~(1 << old_max_num);
+			}
+		}
+
 
 		return *this;
 	}
 
 }
 
-//CSet operator+(const CSet& Set1, const CSet& Set2)
-//{
-//	if (Set1.N > Set2.N) {
-//		CSet ob(Set1.N);
-//		size_t new_arr_size = Set2.size_arr + 1;
-//		//std::cout << new_arr_size;
-//		unsigned int* new_set = new unsigned int[new_arr_size];
+CSet& CSet::operator++(int) {
+	CSet temp(*this);
+	if ((this->N + 1) % 32 == 0) {
+		this->size_arr++;
+		this->N++;
+		unsigned int* increment_set = new unsigned int[size_arr];
+
+		for (size_t i = 0; i < size_arr - 1; ++i) {
+			increment_set[i] = this->Set[i];
+		}
+		increment_set[size_arr - 1] = 0;
+
+		delete[] Set;
+		Set = increment_set;
+		return temp;
+	}
+	else {
+		this->N++;
+		return temp;
+	}
+}
+
+CSet& CSet::operator--(int) {
+	CSet temp(*this);
+	if ((this->N + 1) % 32 == 1) {
+		size_t old_size_arr = this->size_arr;
+		this->size_arr--;
+		this->N--;
+
+		if (this->size_arr == 0) {
+			unsigned int* decrement_set = nullptr;
+			delete[] Set;
+			Set = decrement_set;
+		}
+		else {
+			unsigned int* decrement_set = new unsigned int[size_arr];
+
+			for (size_t i = 0; i < size_arr; ++i) {
+				if (i == old_size_arr - 1) {
+					break;
+				}
+				else {
+					decrement_set[i] = this->Set[i];
+				}
+			}
+			delete[] Set;
+			Set = decrement_set;
+		}
+		return temp;
+
+	}
+	else {
+		int old_max_num = this->N;
+		this->N--;
+		if (N == 0) {
+			this->Set = nullptr;
+		}
+		else {
+			for (size_t i = 0; i < size_arr; ++i) {
+				size_t element = floor(old_max_num / 32);
+				this->Set[element] &= ~(1 << old_max_num);
+			}
+		}
+
+
+		return temp;
+	}
+}
+
+CSet operator+(const CSet& Set1, const CSet& Set2) {
+	size_t max = 0;
+	size_t min = 0;
+	max = std::max(Set1.size_arr, Set2.size_arr);
+	min = std::min(Set1.size_arr, Set2.size_arr);
+	//std::cout << "max" << max;
+	//std::cout << "min" << min;
+	////unsigned int* merged_set = new unsigned int[max];
+
+	CSet ob(max);
+	if (min == Set1.size_arr) {
+		unsigned int* more_set = new unsigned int[max];
+
+		/*for (size_t i = 0; i < Set1.size_arr; ++i) {
+			std::cout << Set1.Set[i];
+		}
+		std::cout << std::endl;*/
+
+		for (size_t i = 0; i < min; ++i) {
+			more_set[i] = Set1.Set[i];
+		}
+
+		for (size_t i = 0; i < max - min; ++i) {
+			more_set[i + min] = 0;
+		}
+		
+		for (size_t i = 0; i < max; ++i) {
+			ob.Set[i] = Set2.Set[i] | more_set[i];
+		}
+
+		delete[] more_set;
+
+		return ob;
+	}
+	else {
+		unsigned int* more_set = new unsigned int[max];
+		for (size_t i = 0; i < min; ++i) {
+			more_set[i] = Set2.Set[i];
+		}
+
+		for (size_t i = 0; i < max-min; ++i) {
+			more_set[i + min] = 0;
+		}
+
+		for (size_t i = 0; i < max; ++i) {
+			ob.Set[i] = Set1.Set[i] | more_set[i];
+		}
+		delete[] more_set;
+
+		return ob;
+	}
+	
+	
+}
+
+//CSet operator-(const CSet& Set1, const CSet& Set2) {
+//	size_t min = 0;
+//	min = std::min(Set1.size_arr, Set2.size_arr);
+//	if (min == Set1.size_arr) {
+//		CSet ob(min);
+//		unsigned int* less_set = new unsigned int[min];
 //
-//		for (size_t i = 0; i < new_arr_size-1; ++i) {
-//			new_set[i] = Set2.Set[i];
+//		for (size_t i = 0; i < min; ++i) {
+//			less_set[i] = Set2.Set[i];
 //		}
-//		new_set[new_arr_size - 1] = 0;
 //
-//		delete[] Set2.Set;
-//		Set2.Set = new_set;
-//
-//		for (size_t i = 0; i < Set1.size_arr; ++i) {
-//			ob.Set[i] = Set1.Set[i] | new_set[i];
+//		for (size_t i = 0; i < min; ++i) {
+//			ob.Set[i] = Set1.Set[i] & less_set[i];
 //		}
+//		delete[] less_set;
 //
 //		return ob;
 //	}
-//	
-//
-//}
-//
-//CSet operator-(const CSet& Set1, const CSet& Set2)
-//{
-//	if (Set1.N < Set2.N) {
-//		for (size_t i = 0; i < Set1.N; ++i) {
-//			CSet ob(Set1.Set, Set1.N);
-//			ob.Set[i] = Set1.Set[i] & Set2.Set[i];
-//
-//			return ob;
-//		}
-//	}
 //	else {
-//		for (size_t i = 0; i < Set2.N; ++i) {
-//			CSet ob(Set2.Set, Set2.N);
-//			ob.Set[i] = Set1.Set[i] & Set2.Set[i];
+//		CSet ob(min);
+//		unsigned int* less_set = new unsigned int[min];
 //
-//			return ob;
+//		for (size_t i = 0; i < min; ++i) {
+//			less_set[i] = Set1.Set[i];
 //		}
+//
+//		for (size_t i = 0; i < min; ++i) {
+//			ob.Set[i] = Set2.Set[i] & less_set[i];
+//		}
+//		delete[] less_set;
+//
+//		return ob;
 //	}
 //}
 
@@ -206,7 +324,7 @@ std::ostream& operator<<(std::ostream& os, const CSet& ob) {
 	std::vector<size_t> vec;
 	os << "Размерность битового массива (1 = 32 бита): " << ob.size_arr << std::endl;
 	for (size_t i = 0; i < ob.size_arr; ++i) {
-		os << std::bitset<sizeof(ob.Set[i])* CHAR_BIT>(ob.Set[i]);
+		os << std::bitset<sizeof(ob.Set[i]) * CHAR_BIT>(ob.Set[i]);
 		os << ".";
 	}
 	/*for (size_t i = 0; i < ob.N; ++i) {
