@@ -58,6 +58,72 @@ CSet& CSet::operator= (CSet&& set2) noexcept {
 	return *this;
 }
 
+CSet& CSet::operator++() {
+
+	if ((n + 1) % 32 == 0) {
+		++size_arr;
+		++n;
+		uint* increment_set = new uint[size_arr];
+
+		for (size_t i = 0; i < size_arr - 1; ++i) {
+			increment_set[i] = set[i];
+		}
+		increment_set[size_arr - 1] = 0;
+
+		delete[] set;
+		set = increment_set;
+		return *this;
+	}
+	else {
+		++n;
+		return *this;
+	}
+}
+
+CSet& CSet::operator--() {
+	
+	if ((n + 1) % 32 == 1) {
+		--size_arr;
+		--n;
+
+		if (size_arr == 0) {
+			uint* decrement_set = nullptr;
+			delete[] set;
+			set = decrement_set;
+		}
+		else {
+			uint* decrement_set = new uint[size_arr];
+
+			for (size_t i = 0; i < size_arr; ++i) {
+				if (i == size_arr) {
+					break;
+				}
+				else {
+					decrement_set[i] = set[i];
+				}
+			}
+			delete[] set;
+			set = decrement_set;
+		}
+		return *this;
+	}
+	else {
+		size_t old_n = n;
+		--n;
+		if (n == 0) {
+			set = nullptr;
+		}
+		else {
+			for (size_t i = 0; i < size_arr; ++i) {
+				size_t element = floor(old_n / 32);
+				this->set[element] &= ~(1 << old_n);
+			}
+		}
+
+		return *this;
+	}
+}
+
 
 
 CSet::~CSet() {
