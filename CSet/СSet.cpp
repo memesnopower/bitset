@@ -124,12 +124,61 @@ CSet& CSet::operator--() {
 	}
 }
 
+CSet CSet::operator++(int) {
+	CSet temp(*this);
+	++(*this);
+	return temp;
+}
 
+CSet CSet::operator--(int) {
+	CSet temp(*this);
+	--(*this);
+	return temp;
+}
 
 CSet::~CSet() {
 
 	delete_memory();
 }
+
+bool CSet::check(uint num) const {
+		size_t element = floor(num / 32);
+		if (set[element] & (1 << (num - 32 * element))) {
+			return true;
+		}
+		return false;
+}
+
+CSet operator+(const CSet& set1, const CSet& set2) {
+	size_t n = std::max(set1.n, set2.n);
+	CSet ret(n);
+
+	for (size_t i = 0; i <= n; ++i) {
+		if (set1.check(i) == true || set2.check(i) == true) {
+			size_t element = floor(i / 32);
+			size_t shifts = i - 32 * element;
+			ret.set[element] |= (1 << shifts);
+		}
+	}
+
+	return ret; 
+}
+
+CSet operator-(const CSet& set1, const CSet& set2) {
+	size_t n = std::min(set1.n, set2.n);
+	CSet ret(n);
+
+	for (size_t i = 0; i <= n; ++i) {
+		if (set1.check(i) == true && set2.check(i) == true) {
+			size_t element = floor(i / 32);
+			size_t shifts = i - 32 * element;
+			ret.set[element] |= (1 << shifts);
+		}
+	}
+
+	return ret;
+}
+
 
 
 
