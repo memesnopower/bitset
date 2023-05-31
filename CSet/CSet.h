@@ -1,6 +1,3 @@
-#pragma once
-
-#include <iostream>
 #include <bitset>
 #include <algorithm>
 #include <cmath>
@@ -20,11 +17,18 @@ public:
 	CSet& operator= (CSet&& set2) noexcept;
 	~CSet();
 
-
+	CSet& operator++();
+	CSet& operator--();
+	CSet operator++(int);
+	CSet operator--(int);
 
 
 	void add(size_t size, uint* arr);
+	bool check(uint num) const;
 	friend std::ostream& operator<< (std::ostream& os, const CSet& ob);
+	friend CSet operator+(const CSet& set1, const CSet& set2);
+	friend CSet operator-(const CSet& set1, const CSet& set2);
+
 
 private:
 	size_t n = 0; 
